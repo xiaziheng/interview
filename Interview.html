@@ -15,21 +15,13 @@
 	</style>
 	<script src="js/jquery-1.7.2.js"></script>
 	<script>
+	// [复试题目]自己模拟一个二维数组，用节点操作等JQuery函数，画一个10行5列的<table>表格，并在第11行各列，对上面的所有行分别求和。该题目的结果是一个带JAVASCRIPT代码的HTML静 态文件，并现场演示和讲解代码。
 		function rnm(m,n){
 			return parseInt(Math.random()*(n-m)+m)
 		}
 		$(function(){
 			var L=10;
-			var C=5;		
-			// 封装数组转字符串
-		    function sta(arr){
-		    	var str='';
-			    for(var i=0;i<arr.length;i++){
-			   		var str1='['+arr[i].join(',')+']';
-			   		str+=str1;
-			   	}
-			  	return str;
-		    } 
+			var C=5;					
 		    // 封装创建二维数组 
 			function newArr(L,C){
 				var arr=new Array;
@@ -41,7 +33,16 @@
 			    	arr.push(arr2);
 			    }		    
 			   	return arr;
-			}			
+			}	
+			// 封装数组转字符串
+		    function sta(arr){
+		    	var str='';
+			    for(var i=0;i<arr.length;i++){
+			   		var str1='['+arr[i].join(',')+']';
+			   		str+=str1;
+			   	}
+			  	return str;
+		    } 		
 			// 封装创建表格并且把数组的数绑定到表格内
 			function pInsert(arr){
 				$('tbody').html('');
@@ -80,25 +81,33 @@
 				$('tr').eq(10).remove();
 			   	pInsert(arr);
 			   	newLast();
+			   	$('.text').html(sta(arr));
 			})
-			// 添加数组
+			// 添加换数的事件
 			$('td').click(function(){
+				console.log($(this))
 				var td=$(this);
 				var R=td[0].parentNode.rowIndex;
 				var c=td[0].cellIndex;
 				// 判断是否是算数行
         		if(R<10){
+
         			$('.mask').css('display','block');
         			$('#content').val($(this).html());  
-        			// 点击确定完成替换数   			
-        			$('#btn').click(function(){
+        			// 点击确定完成替换数  
+        			function replace(){
         				$('.mask').css('display','none');
+        				console.log(td)
         				td.html($('#content').val());
+        				
         				arr[R].splice(c,1,parseInt($('#content').val()));
         				$('tr').eq(10).remove();
 					   	newLast();
 					   	$('.text').html(sta(arr));
-        			})
+					   	$('#btn').unbind('click',replace);
+        			}
+        			$('#btn').bind('click',replace);
+        			
         		}
 			})
 		})
